@@ -1,0 +1,13 @@
+params:
+  - id: admin_password
+    type: secret
+    name: "Centrifugo 管理界面密码"
+    description: "登录 Centrifugo 管理界面（Admin UI）的密码（自动生成，可在部署时修改）"
+    default_value: "$random(len=20)"
+    optional: false
+
+locales:
+  zh:
+    admin_password:
+      name: "Centrifugo 管理界面密码"
+      description: "登录 Centrifugo 管理界面的密码（自动生成，可修改）"

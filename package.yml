@@ -1,0 +1,18 @@
+package: community.lazycat.app.centrifugo
+name: centrifugo
+version: 6.10.2
+description: "Scalable real-time messaging server: WebSocket, SSE, stream bidirectional communication."
+min_os_version: "1.5.0"
+homepage: https://github.com/centrifugal/centrifugo
+author: centrifugal
+license: Apache-2.0
+permissions:
+  required:
+    - net.internet
+locales:
+  zh:
+    name: Centrifugo 实时消息服务
+    description: "可扩展的实时消息服务器：支持 WebSocket、SSE 与流式双向通信。"
+  en:
+    name: Centrifugo
+    description: "Scalable real-time messaging server: WebSocket, SSE, stream bidirectional communication."

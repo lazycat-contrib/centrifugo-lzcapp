@@ -1,0 +1,42 @@
+application:
+  subdomain: centrifugo
+  multi_instance: false
+  # Centrifugo has a single shared admin password (CENTRIFUGO_ADMIN_PASSWORD)
+  # and no user accounts / self-registration, so it must NOT be exposed via
+  # public_path; the platform login gate stays the first line of defense.
+  upstreams:
+    - location: /package-licenses/
+      backend: file:///lzcapp/pkg/content/licenses/
+    - location: /
+      backend: http://centrifugo:8000/
+
+services:
+  centrifugo:
+    # upstream: centrifugo/centrifugo:v6.10.2 (official image)
+    image: docker.1ms.run/centrifugo/centrifugo:6.10.2
+    environment:
+      # Without these the admin UI is either disabled or requires credentials
+      # that only exist in container logs (user would be locked out).
+      - CENTRIFUGO_ADMIN_ENABLED=true
+      - CENTRIFUGO_ADMIN_EXTERNAL=true
+      - CENTRIFUGO_ADMIN_PASSWORD={{ .U.admin_password }}
+      # Token-signing secret must stay stable across container rebuilds.
+      - CENTRIFUGO_ADMIN_SECRET={{ printf "%x" (stable_secret "centrifugo_admin_secret") }}
+      - TZ=Asia/Shanghai
+
+usage: |
+  Centrifugo 是一个可扩展的实时消息服务器：支持 WebSocket、SSE 与流式双向通信，
+  可与任何后端语言配合，向浏览器/移动端推送实时消息，自带管理界面（Admin UI）。
+
+  使用方法：
+  1. 首次部署时在部署配置里查看/修改「Centrifugo 管理界面密码」（已自动生成随机值）。
+  2. 打开应用，输入该密码进入管理界面，可在其中查看连接、频道与发布测试消息。
+  3. 业务后端通过 HTTP API 或服务端 SDK（GRPC）接入，客户端连接地址为本应用入口。
+
+  数据与安全：
+  - Centrifugo 默认使用内存引擎，重启后连接状态清空（历史消息不入库）；
+  - 本应用只有一个共享管理密码，无多账号体系，因此不对外开放未登录访问
+    （保持平台入口鉴权）。
+
+  说明：
+  - 本包未做实机验证，功能以官方文档为准，遇到问题请反馈。
