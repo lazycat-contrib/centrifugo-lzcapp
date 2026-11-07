@@ -9,11 +9,10 @@ application:
       backend: file:///lzcapp/pkg/content/licenses/
     - location: /
       backend: http://centrifugo:8000/
-
 services:
   centrifugo:
-    # upstream: centrifugo/centrifugo:v6.10.2 (official image)
-    image: docker.1ms.run/centrifugo/centrifugo:6.10.2
+    # upstream: centrifugo/centrifugo:v6.10.2
+    image: docker.1ms.run/centrifugo/centrifugo:v6.10.2
     environment:
       # Without these the admin UI is either disabled or requires credentials
       # that only exist in container logs (user would be locked out).
@@ -23,7 +22,6 @@ services:
       # Token-signing secret must stay stable across container rebuilds.
       - CENTRIFUGO_ADMIN_SECRET={{ printf "%x" (stable_secret "centrifugo_admin_secret") }}
       - TZ=Asia/Shanghai
-
 usage: |
   Centrifugo 是一个可扩展的实时消息服务器：支持 WebSocket、SSE 与流式双向通信，
   可与任何后端语言配合，向浏览器/移动端推送实时消息，自带管理界面（Admin UI）。
